@@ -1,54 +1,52 @@
-# React + TypeScript + Vite
+# 🪙 Crypto Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Crypto Dashboard** — современное приложение для real-time мониторинга курсов криптовалют с возможностью персонализации и расширенной визуализации.
 
-Currently, two official plugins are available:
+## 🚀 Цель проекта
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Отслеживание курсов топовых криптовалют в реальном времени
+- Персонализация интерфейса и избранного
+- Визуализация данных и интерактивные инструменты для анализа
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📌 Функционал
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### 1. Основные блоки
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **Главный экран**
+  - Топ-10 монет по капитализации (сортировка по колонкам)
+  - График изменения цены (ApexCharts)
+- **Детальная страница**
+  - История цены (1 день/неделя/месяц)
+  - 3D-визуализация волатильности (Three.js + `react-three-fiber`)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 2. Интерактив
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+- **Избранное**
+  - Добавление в избранное (анимация: GSAP `scale`)
+  - Локальное хранение (Zustand + `localStorage`)
+- **Конвертер**
+  - Перевод между валютами (BTC → USD, ETH → EUR и др.) с рекурсивными запросами
+
+
+## 🛠 Технологии и библиотеки
+
+| Часть         | Технологии и библиотеки                                                                             |
+| ------------- | --------------------------------------------------------------------------------------------------- |
+| **API**       | [Axios](https://axios-http.com/)                                                                    |
+| **Графики**   | [ApexCharts](https://apexcharts.com/)                                                               |
+| **3D**        | [Three.js](https://threejs.org/) + [react-three-fiber](https://docs.pmnd.rs/react-three-fiber)      |
+| **Состояние** | [Zustand](https://zustand-demo.pmnd.rs/) + [React Query](https://tanstack.com/query/latest)         |
+| **Анимации**  | [Framer Motion](https://www.framer.com/motion/), [GSAP](https://gsap.com/)                     |
+| **UI**        | [Tailwind CSS](https://tailwindcss.com/), [React Icons](https://react-icons.github.io/react-icons/) |
+| **Тесты**     | [Vitest](https://vitest.dev/), [MSW](https://mswjs.io/)                                             |
+
+---
+
+## ⚡️ Быстрый старт
+
+```bash
+bun install
+bun run dev
 ```
