@@ -1,15 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-
-interface IThemeStore {
-  isDarkMode: boolean;
-  toggleTheme: () => void;
-}
-
-interface IFavoriteStore {
-  id: string;
-  setId: (id: string) => void;
-}
+import type { IThemeStore } from "../../types/IThemeStore.type";
+import type { IFavoriteStore } from "../../types/IFavoriteStore.type";
 
 export const useThemeStore = create<IThemeStore>()(
   persist(
@@ -26,9 +18,21 @@ export const useThemeStore = create<IThemeStore>()(
 
 export const useFavoritesStore = create<IFavoriteStore>()(
   persist(
-    (set) => ({
-      id: "",
-      setId: (id) => set({ id: id }),
+    (set, get) => ({
+      favorites: [],
+      toggleFavorite: (id: string) => {
+        set((state) => {
+          const isFavorite = state.favorites.includes(id);
+          return {
+            favorites: isFavorite
+              ? state.favorites.filter((favId) => favId !== id)
+              : [...state.favorites, id],
+          };
+        });
+      },
+      isFavorite: (id: string) => {
+        return get().favorites.includes(id);
+      },
     }),
     {
       name: "favorites-storage",
