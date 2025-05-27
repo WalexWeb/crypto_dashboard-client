@@ -7,17 +7,21 @@ import {
   FaRegStar,
   FaArrowUp,
   FaArrowDown,
+  FaCoins,
+  FaChartLine,
+  FaFire,
 } from "react-icons/fa";
-import { SiEthereum } from "react-icons/si";
 import { useFavoritesStore, useThemeStore } from "../stores/CryptoStore";
 import { StatCard } from "../components/ui/StatCard";
 import Navbar from "../components/layout/Navbar";
 import type { Coin } from "../../types/Coin.type";
+import type { MarketData } from "../../types/IMarketData.type";
 
 const CryptoDashboard = () => {
   const { isDarkMode } = useThemeStore();
   const { toggleFavorite, isFavorite } = useFavoritesStore();
   const [coins, setCoins] = useState<Coin[]>([]);
+  const [marketData, setMarketData] = useState<MarketData | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<{
@@ -28,13 +32,11 @@ const CryptoDashboard = () => {
     direction: "desc",
   });
 
-  // Загрузка данных
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "https://api.coingecko.com/api/v3/coins/markets",
-          {
+        const [coinsResponse, globalResponse] = await Promise.all([
+          axios.get("https://api.coingecko.com/api/v3/coins/markets", {
             params: {
               vs_currency: "usd",
               order: "market_cap_desc",
@@ -42,9 +44,12 @@ const CryptoDashboard = () => {
               page: 1,
               sparkline: false,
             },
-          }
-        );
-        setCoins(response.data);
+          }),
+          axios.get("https://api.coingecko.com/api/v3/global"),
+        ]);
+
+        setCoins(coinsResponse.data);
+        setMarketData(globalResponse.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -82,6 +87,15 @@ const CryptoDashboard = () => {
     }
   });
 
+  // Форматирование чисел
+  const formatNumber = (num: number) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    }).format(num);
+  };
+
   // Анимации
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -116,30 +130,58 @@ const CryptoDashboard = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <StatCard
             title="Общая капитализация"
-            value="$1.24T"
-            change="+2.4%"
-            icon={<FaBitcoin />}
+            value={
+              marketData
+                ? formatNumber(marketData.total_market_cap.usd)
+                : "Loading..."
+            }
+            change={
+              marketData
+                ? `${marketData.market_cap_change_percentage_24h_usd.toFixed(2)}%`
+                : "0%"
+            }
+            icon={<FaCoins className="text-yellow-500" />}
             darkMode={isDarkMode}
           />
           <StatCard
             title="Объем за 24ч"
-            value="$48.5B"
-            change="+5.2%"
-            icon={<SiEthereum />}
+            value={
+              marketData
+                ? formatNumber(marketData.total_volume.usd)
+                : "Loading..."
+            }
+            change={
+              marketData
+                ? `${((marketData.total_volume.usd / marketData.total_market_cap.usd) * 100).toFixed(2)}%`
+                : "0%"
+            }
+            icon={<FaChartLine className="text-blue-500" />}
             darkMode={isDarkMode}
           />
           <StatCard
             title="Доминирование BTC"
-            value="42.8%"
-            change="-0.7%"
-            icon={<FaBitcoin />}
+            value={
+              marketData
+                ? `${marketData.market_cap_percentage.btc.toFixed(1)}%`
+                : "Loading..."
+            }
+            change={
+              marketData
+                ? `${(marketData.market_cap_percentage.btc - 42.8).toFixed(1)}%`
+                : "0%"
+            }
+            icon={<FaBitcoin className="text-orange-500" />}
             darkMode={isDarkMode}
           />
           <StatCard
             title="Активные криптосистемы"
-            value="12,345"
+            value={
+              marketData
+                ? marketData.active_cryptocurrencies.toLocaleString()
+                : "Loading..."
+            }
             change="+1.2%"
-            icon={<FaBitcoin />}
+            icon={<FaFire className="text-red-500" />}
             darkMode={isDarkMode}
           />
         </div>
@@ -186,7 +228,7 @@ const CryptoDashboard = () => {
                   className="col-span-2 text-right cursor-pointer"
                   onClick={() => handleSort("current_price")}
                 >
-                  Price{" "}
+                 Цена
                   {sortConfig.key === "current_price" &&
                     (sortConfig.direction === "asc" ? (
                       <FaArrowUp className="inline" />
