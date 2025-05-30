@@ -1,4 +1,4 @@
-export type Coin = {
+export interface ICoin {
   id: string;
   name: string;
   symbol: string;
@@ -6,4 +6,4 @@ export type Coin = {
   price_change_percentage_24h: number;
   market_cap: number;
   image: string;
-};
+}

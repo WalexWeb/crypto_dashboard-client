@@ -26,7 +26,7 @@ function Navbar({ searchTerm, setSearchTerm }: ISearch) {
           <input
             type="text"
             placeholder="Найти валюту..."
-            className={`w-full px-10 py-2 rounded-lg ${isDarkMode ? "bg-gray-700 text-white" : "bg-gray-100"}`}
+            className={`w-full px-10 py-2 text-md rounded-lg ${isDarkMode ? "bg-gray-700 text-white" : "bg-gray-100 text-gray-900"}`}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />

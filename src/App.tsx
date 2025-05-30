@@ -1,12 +1,12 @@
 import { Route, Routes } from "react-router-dom";
-import CryptoDashboard from "./app/pages/CryptoDashboard";
+import Home from "./app/pages/Home";
 import CoinDetail from "./app/pages/CoinDetail";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<CryptoDashboard />} />
+        <Route path="/" element={<Home />} />
         <Route path="/detail" element={<CoinDetail />} />
       </Routes>
     </>
