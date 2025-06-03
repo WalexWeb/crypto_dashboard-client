@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { useThemeStore } from "../stores/CryptoStore";
-import Navbar from "../components/layout/Navbar";
-import type { ICoin } from "../../types/ICoin.type";
-import type { IMarketData } from "../../types/IMarketData.type";
-import { instance } from "../../api/instance";
-import { CoinTable } from "../components/features/CoinTable";
-import { MarketStats } from "../components/features/MarketStats";
+import { useThemeStore } from "@/app/stores/CryptoStore";
+import Navbar from "@/app/components/layout/Navbar";
+import type { ICoin } from "@/types/ICoin.type";
+import type { IMarketData } from "@/types/IMarketData.type";
+import { instance } from "@/api/instance";
+import { CoinTable } from "@/app/components/features/CoinTable";
+import { MarketStats } from "@/app/components/features/MarketStats";
 
 const Home = () => {
   const { isDarkMode } = useThemeStore();
