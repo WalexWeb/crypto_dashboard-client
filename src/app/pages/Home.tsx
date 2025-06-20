@@ -6,6 +6,7 @@ import type { IMarketData } from "@/types/IMarketData.type";
 import { instance } from "@/api/instance";
 import { CoinTable } from "@/app/components/features/CoinTable";
 import { MarketStats } from "@/app/components/features/MarketStats";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const Home = () => {
   const { isDarkMode } = useThemeStore();
@@ -20,6 +21,8 @@ const Home = () => {
     key: "market_cap",
     direction: "desc",
   });
+
+  const debouncedSearch = useDebounce(searchTerm, 400);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,8 +62,8 @@ const Home = () => {
 
   const filteredCoins = coins.filter(
     (coin) =>
-      coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+      coin.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      coin.symbol.toLowerCase().includes(debouncedSearch.toLowerCase())
   );
 
   const sortedCoins = [...filteredCoins].sort((a, b) => {
